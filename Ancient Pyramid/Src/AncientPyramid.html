@@ -1,0 +1,443 @@
+<!doctype html>
+<html>
+<head>
+    <title>Ancient Pyramid</title>
+    <link rel="stylesheet" href="AncientPyramid.css">
+    
+    <div id="stage">
+  <h1>Ancient Pyramid</h1>
+  <img id="img" src="" width="300" height="267">
+  <p id="output"></p>
+  <input id="input" type="text"> 
+  <button id="enter">Enter</button> 
+  <br>
+<!--  <button id="save">Save</button>-->
+</div>
+    
+</head>
+<body>
+    <script>
+        
+window.addEventListener("load",init);
+        
+        function init(){
+	if(typeof(Storage)!=="undefined"){
+	
+	display();
+	
+	var button=document.getElementById("button");
+	button.addEventListener("click",saveInfo);
+	}
+	
+	else{
+	//old bowser	
+	}
+    }        
+        function saveInfo(){
+	var img=document.getElementById("img").value;
+    var output=document.getElementById("output").value;
+    var input=document.getElementById("input").value;
+	
+	localStorage.setItem("img",type);
+    localStorage.setItem("output",topping);
+    localStorage.setItem("input",quantity);
+	
+	display();
+	
+}
+        function display(){
+	var rightBox=document.getElementById("stage");
+	var theImg=localStorage.getItem("img");
+    var theOutput=localStorage.getItem("output");
+    var theInput=localStorage.getItem("input");
+    
+	//if(theType==undefined){
+		//document.getElementById("useroutput").innerHTML="";
+	//}
+	//else{ document.getElementById("useroutput").innerHTML="Receipt  <hr /><br /><br /> Donut Type: "+theType+"<br /><br /> Donut Topping: //"+theTopping+"<br /><br /> Quantity Amount: "+theQuantity+"<br /><br /> Membership Status: "+theMember;
+	//}
+	
+}
+        
+//Create the map
+let map = [];
+
+map[0] = "The Wise Sphinx."; //Sphinx
+map[1] = "A Burial of the Ancieant ones.";//Tomb Room
+map[2] = "A room meant to trap the adventurers.";//Trap Room
+map[3] = "Treasures throught out the Centuries.";//Treasure Room
+map[4] = "An Entrance to the Pyramid.";//Entrance Chamber
+map[5] = "Dungeaon full of hungry wolfs.";//Dungeon of Wolfs
+map[6] = "The mighty Kings Tombs.";//Kings Tomb
+map[7] = "An Idol room.";//Statue Room
+map[8] = "A river of lava.";//River of lava
+
+//Set the player's start location
+let mapLocation = 4;
+
+//Set the images
+let images = [];
+
+images[0] ="Image00.jpg";//Sphinx
+images[1] = "Image01.jpg";//Tomb Room
+images[2] = "Image02.jpg";//Trap Room
+images[3] = "Image03.jpg";//Treasure Room
+images[4] = "Image04.jpg";//Entrance Path
+images[5] = "Image05.jpg";//Wolf
+images[6] = "Image06.jpg";//Kings tomb
+images[7] = "Image07.jpg";//Idols
+images[8] = "Image08.jpg";//River of lava
+        
+//Set the blocked path messages
+let blockedPathMessages = [];
+
+blockedPathMessages[0] = "The Wise  Sphinx will not let you pass.";
+blockedPathMessages[1] = "All that awaits you is the tomb.";
+blockedPathMessages[2] = "You may not go any further in this direction.";
+blockedPathMessages[3] = "All the gold is blocking your way.";
+blockedPathMessages[4] = "";
+blockedPathMessages[5] = "One step further than you are dog food.";
+blockedPathMessages[6] = "Kings orders You shall not pass.";
+blockedPathMessages[7] = "There prayers will not let you pass.";
+blockedPathMessages[8] = "Any further and you will drown in lava.";
+        
+let helpMessages = [];
+helpMessages[0] = "I wonder if you could make this beast fall asleep with a SPECIAL SOUND";
+helpMessages[1] = "A good Idea would be to open the tombs for treasure";
+helpMessages[2] = "";
+helpMessages[3] = "";
+helpMessages[4] = "";
+helpMessages[5] = "";
+helpMessages[6] = "I wonder what lies in the Kings Tomb";
+helpMessages[7] = "";
+helpMessages[8] = "";
+
+//Create the items and set their locations
+var items = ["flute"];
+var itemLocations = [2];
+
+//An array to store what the player is carrying
+var backpack = [];
+        
+//Initialize the player's input
+var playersInput = "";
+
+//Initialize the gameMessage
+var gameMessage = "";
+
+//Create an array of actions the game understands
+//and a variable to store the current action
+var actionsIKnow = ["north", "east", "south", "west", "take", "use", "drop", "help"];
+var action = "";
+        
+//An array of items the game understands
+//and a variable to store the current item
+var itemsIKnow = ["flute", "crowbar", "key"];
+var item = "";
+        
+//The img element
+var image = document.querySelector("img");
+
+//The input and output fields
+var output = document.querySelector("#output");
+var input = document.querySelector("#input");
+
+//The button
+var button = document.querySelector("button");
+button.style.cursor = "pointer";
+button.addEventListener("click", clickHandler, false);
+
+//Display the player's location
+render();
+
+function clickHandler()
+{
+  playGame();
+}
+
+function playGame()
+{
+  //Get the player's input and convert it to lowercase
+  playersInput = input.value;
+  playersInput = playersInput.toLowerCase();
+  
+  //Reset these variables from the previous turn
+  gameMessage = "";
+  action = "";
+  
+  //Figure out the player's action
+  for(i = 0; i < actionsIKnow.length; i++)
+  {
+    if(playersInput.indexOf(actionsIKnow[i]) !== -1)
+    {
+      action = actionsIKnow[i];
+      console.log("player's action: " + action);
+      break;
+    }
+  }
+  
+   //Choose the correct action
+  switch(action)
+  {
+    case "north":
+      if(mapLocation >= 3)
+      {
+        mapLocation -= 3;
+      }
+      else
+      {
+        gameMessage = blockedPathMessages[mapLocation];
+      }
+      break;
+    
+    case "east":
+	    if(mapLocation % 3 != 2)
+      {
+        mapLocation += 1;
+      }
+      else
+      {
+        gameMessage = blockedPathMessages[mapLocation];
+      }
+      break;
+      
+    case "south":
+      if(mapLocation < 6)
+      {
+        mapLocation += 3;
+      }
+      else
+      {
+        gameMessage = blockedPathMessages[mapLocation];
+      }
+      break;
+      
+    case "west":
+      if(mapLocation % 3 != 0)
+      {
+        mapLocation -= 1;
+      }
+      else
+      {
+        gameMessage = blockedPathMessages[mapLocation];
+      }
+      break;
+      
+   case "help":
+   //Display a hint if there is one for this location
+   if(helpMessages[mapLocation] !== "")
+   {
+     gameMessage = helpMessages[mapLocation] + " ";
+   }
+   gameMessage += "Try any of these words: "
+   gameMessage += "north, east, south, west, take, drop, ";
+   gameMessage += "use, flute, crowbar, key.";
+   break;
+          
+    case "take":
+      takeItem()
+		  break;
+		
+		case "drop":
+		  dropItem();
+		  break;
+		  
+		case "use":
+		  useItem();
+		  break;
+    		  
+		default:
+		  gameMessage = "I don't understand that.";
+  }
+  
+  //Render the game
+  render();
+}
+        
+function takeItem()
+{
+  //Find the index number of the item in the items array
+  var itemIndexNumber = itemLocations.indexOf(2);
+  
+  //Does the item exist in the game world
+  //and is it at the player's current location?
+  if(itemIndexNumber !== -1 
+  && itemLocations[itemIndexNumber] === mapLocation)
+  {
+    gameMessage = "You take the " + items + ".";
+    
+    //Add the item to the player's backpack 
+    backpack.push(items);
+   
+    //Remove the item from the game world
+    items.splice(itemIndexNumber, 1);
+    itemLocations.splice(itemIndexNumber, 1);
+          
+    //Display in the console for testing
+    console.log("World items: " + items);
+    console.log("backpack items: " + item);
+  }
+  else
+  {
+    //Message if you try and take an item
+    //that isn't in the current location
+    gameMessage = "You can't do that.";
+  }
+}
+
+        
+function dropItem()
+{
+  //Try to drop the item only if the backpack isn't empty
+  if(backpack.length !== 0)
+  {
+    //Find the item's array index number in the backpack
+    var backpackIndexNumber = backpack.indexOf(item);
+	  
+	  //The item is in the backpack if backpackIndex number isn't -1
+    if(backpackIndexNumber !== -1)
+    {
+    
+     //Tell the player that the item has been dropped
+   	 gameMessage = "You drop the " + item + ".";
+     
+     //Add the item from the backpack to the game world 
+     items.push(backpack[backpackIndexNumber]);
+     itemLocations.push(mapLocation); 
+     
+     //Remove the item from the player's backpack 
+     backpack.splice(backpackIndexNumber, 1);
+    }
+    else
+    {
+      //Message if the player tries to drop
+      //something that's not in the backpack
+      gameMessage = "You can't do that.";
+    }
+  }
+  else
+  {
+    //Message if the backpack is empty
+    gameMessage = "You're not carrying anything.";
+  }
+}
+        
+function useItem()
+{
+  //1. Find out if the item is in the backpack
+  
+  //Find the item's array index number in the backpack
+  var backpackIndexNumber = backpack.indexOf(item);
+       
+  //If the index number is -1, then it isn't in the backpack.
+  //Tell the player that he or she isn't carrying it.
+  if(backpackIndexNumber === -1)
+  {
+    gameMessage = "You're not carrying it.";
+  }
+  
+  //If there are no items in the backpack, then
+  //tell the player the backpack is empty
+  if(backpack.length === 0)
+  {
+    gameMessage += " Your backpack is empty";
+  }
+   
+  //2. If the item is found in the backpack
+  //figure out what to do with it
+  if(backpackIndexNumber !== -1)
+  {
+    switch(item)
+    {
+	    case "flute":
+	      if(mapLocation === 0)
+	      {
+	        gameMessage 
+	          = "You played a soothing sound to make the Sphinx fall asleep";
+            
+              gameMessage += " Next to the Sphinx is a crowbar";
+
+              //Add the crowbar to the world
+             items.push("crowbar");
+             itemLocations.push(mapLocation);
+	      }
+	      else
+	      {
+	        gameMessage 
+	          = "You played a soothing sound.";
+	      }
+	      break;
+	      
+	    case "crowbar":
+	      if(mapLocation === 1)
+	      {
+	        gameMessage 
+	          = "You managed to open the old tomb!";
+              
+             gameMessage += " In the tomb you see a Golden Key fit for a king"; 
+              
+               //Add the key to the world
+             items.push("key");
+             itemLocations.push(mapLocation);
+              
+	      }
+	      else
+	      {
+	        gameMessage 
+	          = "It will come in handy.";
+	      }
+	      break;
+	      
+	    case "key":
+	      if(mapLocation === 6)
+	      {
+	        gameMessage = "You opened the great Kings tomb.";
+              
+            gameMessage += " In the Kings tomb you see a The Holy Grail";  
+              gameMessage += " Great Job, You found the Holy Grail now wish till your hearts content"; 
+	        
+	      }
+        else
+        {
+	        gameMessage 
+	          = "Thats a fancy key.";
+	      }
+	      break;			          
+	   }
+   }
+}
+        
+function render()
+{
+  //Render the location
+  output.innerHTML = map[mapLocation];
+  image.src = "../images/" + images[mapLocation];
+  
+  //Display an item if there's one in this location
+  //1. Loop through all the game items
+  for(var i = 0; i < items.length; i++)
+  {
+   //Find out if there's an item at this location
+   if(mapLocation === itemLocations[i])
+   {
+     //Display it
+     output.innerHTML 
+      += "<br>You see a <strong>" 
+      + items[i]
+      + "</strong> here.";
+   }
+  }
+  
+  //Display the game message
+  output.innerHTML += "<br><em>" + gameMessage + "</em>";
+  
+  //Display the player's backpack contents
+  if(backpack.length !== 0)
+  {
+    output.innerHTML += "<br>You are carrying: " + backpack.join(", ");  
+  }
+}
+
+    </script>
+</body>
+</html>
